@@ -1,0 +1,14 @@
+.vscode
+
+.env
+
+node_modules/
+
+build
+
+*.js
+!jest.config.js
+*.d.ts
+
+.cdk.staging
+cdk.out
