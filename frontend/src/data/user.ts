@@ -80,3 +80,14 @@ export const createUser = async (data: any, role: UserRole = "USER") => {
 
   return user;
 };
+
+export const updateUser = async (userId: string, updateFields: object) => {
+  const existingUser = await getUser(userId);
+  await client.put({
+    TableName: tableName,
+    Item: {
+      ...existingUser,
+      ...updateFields,
+    },
+  });
+};

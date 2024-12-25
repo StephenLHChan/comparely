@@ -1,11 +1,15 @@
 import NextAuth, { type DefaultSession } from "next-auth";
 import Credential from "next-auth/providers/credentials";
+
+import Google from "next-auth/providers/google";
+import Github from "next-auth/providers/github";
+
 import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBAdapter } from "@auth/dynamodb-adapter";
 
 import { LoginSchema } from "@/schemas";
-import { getUser, getUserByEmail } from "@/data/user";
+import { getUser, getUserByEmail, updateUser } from "@/data/user";
 import bcrypt from "bcryptjs";
 
 declare module "next-auth" {
@@ -37,6 +41,14 @@ const client = DynamoDBDocument.from(new DynamoDB(config), {
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
+    Github({
+      clientId: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    }),
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
     Credential({
       async authorize(credentials) {
         const validatedFields = LoginSchema.safeParse(credentials);
@@ -51,6 +63,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
+  events: {
+    async linkAccount({ user }) {
+      const existingUser = await getUser(user.id!);
+      if (existingUser && !existingUser.role) {
+        await updateUser(existingUser.id, {
+          role: "USER",
+          emailVerified: new Date().toISOString(),
+        });
+      }
+    },
+  },
   callbacks: {
     async session({ token, session }) {
       if (token.sub && session.user) {
@@ -59,7 +82,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (token.role && session.user) {
         session.user.role = token.role as "ADMIN" | "USER";
       }
-      console.log(session);
       return session;
     },
     async jwt({ token }) {
