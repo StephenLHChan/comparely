@@ -40,6 +40,10 @@ const client = DynamoDBDocument.from(new DynamoDB(config), {
 });
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  pages: {
+    signIn: "/login",
+    error: "/auth-error",
+  },
   providers: [
     Github({
       clientId: process.env.GITHUB_CLIENT_ID,
