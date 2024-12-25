@@ -57,9 +57,12 @@ export const getUser = async (userId: string) => {
   }
 };
 
-export const createUser = async (data: any) => {
+type UserRole = "USER" | "ADMIN";
+
+export const createUser = async (data: any, role: UserRole = "USER") => {
   const user = {
     ...(data as any),
+    role,
     id: crypto.randomUUID(),
   };
 
