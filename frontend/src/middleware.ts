@@ -4,7 +4,7 @@ import {
   apiAuthPrefix,
   publicRoutes,
   authRoutes,
-} from "@/routes";
+} from "@/lib/routes";
 
 export default auth(req => {
   const { nextUrl } = req;
