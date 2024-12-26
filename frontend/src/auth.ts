@@ -1,4 +1,4 @@
-import NextAuth, { type DefaultSession } from "next-auth";
+import NextAuth, { type User } from "next-auth";
 import Credential from "next-auth/providers/credentials";
 
 import Google from "next-auth/providers/google";
@@ -12,14 +12,16 @@ import { LoginSchema } from "@/schemas";
 import { getUser, getUserByEmail, updateUser } from "@/data/user";
 import bcrypt from "bcryptjs";
 
+export type ExtendedUser = {
+  role: "ADMIN" | "USER";
+} & User;
+
 declare module "next-auth" {
   /**
    * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
-    user: {
-      role: "ADMIN" | "USER";
-    } & DefaultSession["user"];
+    user: ExtendedUser;
   }
 }
 
