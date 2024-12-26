@@ -9,11 +9,15 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <SessionProvider session={session}>
       <SidebarProvider>
-        <AppSidebar />
-        <main>
-          <SidebarTrigger />
-          {children}
-        </main>
+        <div className="flex w-full">
+          <AppSidebar />
+          <div className="w-full">
+            <SidebarTrigger />
+            <main className="min-h-full p-4 lg:container lg:pt-10">
+              {children}
+            </main>
+          </div>
+        </div>
       </SidebarProvider>
     </SessionProvider>
   );
