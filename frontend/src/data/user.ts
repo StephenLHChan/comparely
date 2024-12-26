@@ -1,5 +1,9 @@
-import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
-import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
+import {
+  DynamoDBDocument,
+  type ScanCommandInput,
+  type ScanCommandOutput,
+} from "@aws-sdk/lib-dynamodb";
+import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 
 const tableName = process.env.AUTH_DYNAMODB_TABLE_NAME;
 const indexName = process.env.AUTH_INDEX_NAME || "GSI1";
@@ -19,6 +23,32 @@ const client = DynamoDBDocument.from(new DynamoDB(config), {
     convertClassInstanceToMap: true,
   },
 });
+
+export const getUsers = async () => {
+  try {
+    const params: ScanCommandInput = {
+      TableName: tableName,
+      FilterExpression:
+        "begins_with(pk, :pkPrefix) AND begins_with(sk, :skPrefix)",
+      ExpressionAttributeValues: {
+        ":pkPrefix": "USER",
+        ":skPrefix": "USER",
+      },
+    };
+
+    let data: ScanCommandOutput;
+    let items = [];
+
+    do {
+      data = await client.scan(params);
+      items = items.concat(data.Items);
+      params.ExclusiveStartKey = data.LastEvaluatedKey;
+    } while (data.LastEvaluatedKey);
+    return items;
+  } catch {
+    return null;
+  }
+};
 
 export const getUserByEmail = async (email: string) => {
   try {
