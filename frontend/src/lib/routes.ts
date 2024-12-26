@@ -20,3 +20,31 @@ export const authRoutes = ["/login", "/register"];
 export const apiAuthPrefix = "/api/auth";
 
 export const DEFAULT_LOGIN_REDIRECT = "/home";
+
+export type PageRoute = {
+  title: string;
+  items: PageRoutesItemType;
+};
+
+type PageRoutesItemType = {
+  title: string;
+  href: string;
+  icon?: string;
+  isComing?: boolean;
+  isNew?: boolean;
+  newTab?: boolean;
+  items?: PageRoutesItemType;
+}[];
+
+export const pageRoutes: PageRoute[] = [
+  {
+    title: "Admin",
+    items: [
+      {
+        title: "Users",
+        href: "/admin/user",
+        icon: "Users",
+      },
+    ],
+  },
+];
