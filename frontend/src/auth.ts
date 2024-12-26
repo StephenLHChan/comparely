@@ -70,12 +70,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   events: {
+    async signIn({ user, account, isNewUser }) {
+      if (isNewUser && user.id) {
+        await updateUser(user?.id, {
+          provider: account?.provider,
+        });
+      }
+    },
+
     async linkAccount({ user }) {
       const existingUser = await getUser(user.id!);
       if (existingUser && !existingUser.role) {
         await updateUser(existingUser.id, {
           role: "USER",
           emailVerified: new Date().toISOString(),
+          created_at: new Date().toISOString(),
         });
       }
     },

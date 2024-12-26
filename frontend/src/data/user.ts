@@ -105,6 +105,7 @@ export const createUser = async (data: any, role: UserRole = "USER") => {
       type: "USER",
       GSI1PK: `USER#${user.email}`,
       GSI1SK: `USER#${user.email}`,
+      created_at: new Date().toISOString(),
     },
   });
 
@@ -118,6 +119,7 @@ export const updateUser = async (userId: string, updateFields: object) => {
     Item: {
       ...existingUser,
       ...updateFields,
+      updated_at: new Date().toISOString(),
     },
   });
 };
