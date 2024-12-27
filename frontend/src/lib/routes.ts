@@ -19,6 +19,8 @@ export const authRoutes = ["/login", "/register"];
  */
 export const apiAuthPrefix = "/api/auth";
 
+export const adminRoutesPrefix = "/admin";
+
 export const DEFAULT_LOGIN_REDIRECT = "/home";
 
 export type PageRoute = {
