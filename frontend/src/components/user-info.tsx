@@ -1,11 +1,19 @@
 import { ExtendedUser } from "@/auth";
+
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "./ui/badge";
-import UserAvatar from "./user-avatar";
-import { Mail } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import UserAvatar from "@/components/user-avatar";
+import { format } from "date-fns";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+
+import { CalendarIcon, CircleCheck, CircleX, Mail } from "lucide-react";
 
 interface UserInfoProps {
-  user?: ExtendedUser;
+  user?: ExtendedUser & { created_at: string; emailVerified: string };
   label: string;
 }
 
@@ -22,23 +30,65 @@ export const UserInfo = ({ user }: UserInfoProps) => {
             </div>
           </div>
           {/* TODO: Add # of contribution */}
-          {/* <div className="grid grid-cols-3 divide-x text-center">
+          <div className="grid grid-cols-3 divide-x text-center">
             <div>
-              <h5 className="text-lg font-semibold">184</h5>
-              <div className="text-sm text-muted-foreground">Post</div>
+              <h5 className="text-lg font-semibold">
+                {user?.created_at
+                  ? format(new Date(user.created_at), "MMM yyyy")
+                  : "N/A"}
+              </h5>
+              <div className="text-sm text-muted-foreground">Member Since</div>
             </div>
             <div>
-              <h5 className="text-lg font-semibold">32</h5>
-              <div className="text-sm text-muted-foreground">Projects</div>
+              <h5 className="text-lg font-semibold">
+                {user?.created_at
+                  ? format(new Date(user.created_at), "MMM yyyy")
+                  : "N/A"}
+              </h5>
+              <div className="text-sm text-muted-foreground">Member Since</div>
             </div>
             <div>
-              <h5 className="text-lg font-semibold">4.5K</h5>
-              <div className="text-sm text-muted-foreground">Members</div>
+              <h5 className="text-lg font-semibold">
+                {user?.created_at
+                  ? format(new Date(user.created_at), "MMM yyyy")
+                  : "N/A"}
+              </h5>
+              <div className="text-sm text-muted-foreground">Member Since</div>
             </div>
-          </div> */}
+          </div>
           <div className="flex flex-col gap-y-4">
             <div className="flex items-center gap-3">
-              <Mail className="h-4 w-4" /> {user?.email || "N/A"}
+              <Mail className="h-4 w-4" /> {user?.email || "N/A"}{" "}
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  {user?.emailVerified ? (
+                    <CircleCheck className="font-semibold text-emerald-500" />
+                  ) : (
+                    <CircleX className="font-semibold text-destructive" />
+                  )}
+                </HoverCardTrigger>
+                <HoverCardContent className="w-60">
+                  <div className="flex justify-between space-x-4">
+                    <div className="space-y-1">
+                      <p className="text-sm">
+                        Email {!user?.emailVerified && "not"} verified!
+                      </p>
+                      {user?.emailVerified && (
+                        <div className="flex items-center pt-2">
+                          <CalendarIcon className="mr-2 h-4 w-4 opacity-70" />{" "}
+                          <span className="text-xs text-muted-foreground">
+                            Verified{" "}
+                            {format(
+                              new Date(user.emailVerified),
+                              "MMM dd yyyy"
+                            )}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
             </div>
           </div>
         </div>
