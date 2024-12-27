@@ -1,3 +1,5 @@
+import { UserRole } from "@/auth";
+
 /**
  * An array of routes that are accessible to the public
  * These routes do not require authentication
@@ -26,6 +28,7 @@ export const DEFAULT_LOGIN_REDIRECT = "/home";
 export type PageRoute = {
   title: string;
   items: PageRoutesItemType;
+  allowedRoles: UserRole[];
 };
 
 type PageRoutesItemType = {
@@ -41,6 +44,7 @@ type PageRoutesItemType = {
 export const pageRoutes: PageRoute[] = [
   {
     title: "Admin",
+    allowedRoles: ["ADMIN"],
     items: [
       {
         title: "Users",

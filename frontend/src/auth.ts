@@ -12,8 +12,10 @@ import { LoginSchema } from "@/schemas";
 import { getUser, getUserByEmail, updateUser } from "@/data/user";
 import bcrypt from "bcryptjs";
 
+export type UserRole = "ADMIN" | "USER";
+
 export type ExtendedUser = {
-  role: "ADMIN" | "USER";
+  role: UserRole;
 } & User;
 
 declare module "next-auth" {
@@ -95,7 +97,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.id = token.sub;
       }
       if (token.role && session.user) {
-        session.user.role = token.role as "ADMIN" | "USER";
+        session.user.role = token.role as UserRole;
       }
       return session;
     },
