@@ -15,7 +15,7 @@ const UserInfoPage = async ({ params }: UserInfoPageProps) => {
 
   return (
     <div className="min-w-[800px] max-w-[1200px] items-center">
-      <UserInfo label="User Info" user={user as ExtendedUser} />
+      <UserInfo label="User Info" user={user} />
     </div>
   );
 };

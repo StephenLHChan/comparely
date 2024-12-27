@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { format } from "date-fns";
+
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -80,7 +82,18 @@ const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: "name",
-    header: "Name",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="-ml-3"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => (
       <div className="flex items-center gap-4">
         <UserAvatar
@@ -91,6 +104,22 @@ const columns: ColumnDef<User>[] = [
         <div className="capitalize">{row.getValue("name")}</div>
       </div>
     ),
+  },
+  {
+    accessorKey: "email",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="-ml-3"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Email
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => row.getValue("email"),
   },
   {
     accessorKey: "role",
@@ -109,7 +138,7 @@ const columns: ColumnDef<User>[] = [
     cell: ({ row }) => row.getValue("role"),
   },
   {
-    accessorKey: "email",
+    accessorKey: "created_at",
     header: ({ column }) => {
       return (
         <Button
@@ -117,12 +146,32 @@ const columns: ColumnDef<User>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Created
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-    cell: ({ row }) => row.getValue("email"),
+    cell: ({ row }) =>
+      format(new Date(row.getValue("created_at")), "MMM dd yyyy"),
+  },
+  {
+    accessorKey: "updated_at",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="-ml-3"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Updated
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) =>
+      row.getValue("updated_at")
+        ? format(new Date(row.getValue("updated_at")), "MMM dd yyyy")
+        : "-",
   },
   {
     id: "actions",
@@ -183,8 +232,11 @@ export const UserDataTable = ({ data }: UserDataTableProps) => {
     state: {
       sorting,
       columnFilters,
-      columnVisibility,
+      columnVisibility: { id: false, ...columnVisibility },
       rowSelection,
+    },
+    initialState: {
+      columnVisibility: { id: false },
     },
   });
 
