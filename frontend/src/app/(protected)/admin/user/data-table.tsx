@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -53,8 +56,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { generateAvatarFallback } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import UserAvatar from "@/components/user-avatar";
 
@@ -69,7 +70,9 @@ interface UserDataTableProps {
   data: User[];
 }
 
-export const columns: ColumnDef<User>[] = [
+let pathname = "";
+
+const columns: ColumnDef<User>[] = [
   {
     accessorKey: "id",
     header: "#",
@@ -136,7 +139,9 @@ export const columns: ColumnDef<User>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View user</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={`${pathname}/${row.getValue("id")}`}>View user</Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -161,6 +166,9 @@ export const UserDataTable = ({ data }: UserDataTableProps) => {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+
+  pathname = usePathname();
+
   const table = useReactTable({
     data,
     columns,
