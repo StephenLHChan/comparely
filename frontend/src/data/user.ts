@@ -1,28 +1,12 @@
 import {
-  DynamoDBDocument,
   type ScanCommandInput,
   type ScanCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
-import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
+
+import { client } from "@/data/utils";
 
 const tableName = process.env.AUTH_DYNAMODB_TABLE_NAME;
 const indexName = process.env.AUTH_INDEX_NAME || "GSI1";
-
-const config: DynamoDBClientConfig = {
-  credentials: {
-    accessKeyId: process.env.AUTH_DYNAMODB_ID as string,
-    secretAccessKey: process.env.AUTH_DYNAMODB_SECRET as string,
-  },
-  region: process.env.AUTH_DYNAMODB_REGION,
-};
-
-const client = DynamoDBDocument.from(new DynamoDB(config), {
-  marshallOptions: {
-    convertEmptyValues: true,
-    removeUndefinedValues: true,
-    convertClassInstanceToMap: true,
-  },
-});
 
 export const getUsers = async () => {
   try {
