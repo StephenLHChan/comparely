@@ -1,4 +1,3 @@
-import { ExtendedUser } from "@/auth";
 import { UserInfo } from "@/components/user-info";
 import { getUser } from "@/data/user";
 

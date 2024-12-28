@@ -19,15 +19,12 @@ import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 
-import { icons, LogIn, Menu } from "lucide-react";
+import { LogIn, Menu } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 
 export const Navbar = () => {

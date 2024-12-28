@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Logo } from "./logo";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 // const Footer: React.FC = () => {
