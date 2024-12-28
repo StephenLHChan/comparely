@@ -18,27 +18,8 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  ArrowUpDown,
-  CheckIcon,
-  ChevronDown,
-  MoreHorizontal,
-  PlusCircle,
-} from "lucide-react";
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -58,23 +39,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import UserAvatar from "@/components/user-avatar";
 
-export type User = {
-  id: number;
-  name: string;
-  role: string;
-  image: string;
-};
+import { User } from "@/app/(protected)/admin/user/page";
+import { Product } from "@/app/(protected)/product/page";
 
-interface UserDataTableProps {
-  data: User[];
+interface DataTableProps {
+  data: (User | Product)[];
+  dataType: "User" | "Product";
 }
 
-let pathname = "";
-
-const columns: ColumnDef<User>[] = [
+const userColumns: ColumnDef<User>[] = [
   {
     accessorKey: "id",
     header: "#",
@@ -199,24 +175,24 @@ const columns: ColumnDef<User>[] = [
   },
 ];
 
-const roles = [
-  {
-    value: "USER",
-    label: "user",
-  },
-  {
-    value: "ADMIN",
-    label: "admin",
-  },
-];
+const productColumns: ColumnDef<Product>[] = [];
 
-export const UserDataTable = ({ data }: UserDataTableProps) => {
+const columnsMapping = {
+  User: userColumns,
+  Product: productColumns,
+};
+
+let pathname = "";
+
+export const DataTable = ({ data, dataType }: DataTableProps) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
   pathname = usePathname();
+
+  const columns = columnsMapping[dataType];
 
   const table = useReactTable({
     data,
@@ -245,7 +221,7 @@ export const UserDataTable = ({ data }: UserDataTableProps) => {
       <div className="flex items-center gap-4 py-4">
         <div className="flex gap-2">
           <Input
-            placeholder="Search users..."
+            placeholder={`Search ${dataType.toLowerCase()}s...`}
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             onChange={event =>
               table.getColumn("name")?.setFilterValue(event.target.value)

@@ -2,9 +2,18 @@ import Link from "next/link";
 import { getUsers } from "@/data/user";
 
 import { Button } from "@/components/ui/button";
-import { UserDataTable } from "@/app/(protected)/admin/user/data-table";
+import { DataTable } from "@/components/data-table";
 
 import { CirclePlus } from "lucide-react";
+
+export type User = {
+  id: number;
+  name: string;
+  role: string;
+  image: string;
+  created_at: string;
+  updated_at?: string;
+};
 
 const UserPage = async () => {
   const users = await getUsers();
@@ -20,7 +29,7 @@ const UserPage = async () => {
         </Button>
       </div>
       {users ? (
-        <UserDataTable data={users} />
+        <DataTable data={users} dataType="User" />
       ) : (
         <h1>Oops! Something went wrong...</h1>
       )}
