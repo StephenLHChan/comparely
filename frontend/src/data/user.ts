@@ -75,8 +75,10 @@ export const getUser = async (userId: string) => {
 
 type UserRole = "USER" | "ADMIN";
 
+// eslint-disable-next-line
 export const createUser = async (data: any, role: UserRole = "USER") => {
   const user = {
+    // eslint-disable-next-line
     ...(data as any),
     role,
     id: crypto.randomUUID(),
