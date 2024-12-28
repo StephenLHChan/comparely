@@ -53,6 +53,7 @@ export class BackendStack extends cdk.Stack {
       partitionKey: { name: "pk", type: dynamodb.AttributeType.STRING },
       sortKey: { name: "sk", type: dynamodb.AttributeType.STRING },
       timeToLiveAttribute: "expires",
+      deletionProtection: true,
     });
 
     authTable.addGlobalSecondaryIndex({
@@ -61,11 +62,18 @@ export class BackendStack extends cdk.Stack {
       sortKey: { name: "GSI1SK", type: dynamodb.AttributeType.STRING },
     });
 
-    const authTableUser = new iam.User(this, "AuthTableUser", {
-      userName: "comparely-authTableUser",
+    const productTable = new dynamodb.TableV2(this, `ProductTable`, {
+      tableName: "comparely-product",
+      partitionKey: { name: "pk", type: dynamodb.AttributeType.STRING },
+      sortKey: { name: "sk", type: dynamodb.AttributeType.STRING },
+      deletionProtection: true,
     });
 
-    authTableUser.addToPolicy(
+    const dbTableUser = new iam.User(this, "User", {
+      userName: "comparely",
+    });
+
+    dbTableUser.addToPolicy(
       new iam.PolicyStatement({
         actions: [
           "dynamodb:BatchGetItem",
@@ -79,7 +87,11 @@ export class BackendStack extends cdk.Stack {
           "dynamodb:Query",
           "dynamodb:UpdateItem",
         ],
-        resources: [authTable.tableArn, `${authTable.tableArn}/index/GSI1`],
+        resources: [
+          authTable.tableArn,
+          `${authTable.tableArn}/index/GSI1`,
+          productTable.tableArn,
+        ],
       })
     );
   }
