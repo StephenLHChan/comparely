@@ -53,4 +53,14 @@ export const pageRoutes: PageRoute[] = [
       },
     ],
   },
+  {
+    title: "Product",
+    allowedRoles: ["ADMIN", "USER"],
+    items: [
+      {
+        title: "Product",
+        href: "/product",
+      },
+    ],
+  },
 ];
