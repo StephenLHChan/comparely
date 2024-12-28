@@ -21,10 +21,12 @@ export const getUsers = async () => {
     };
 
     let data: ScanCommandOutput;
+    // eslint-disable-next-line
     let items = [];
 
     do {
       data = await client.scan(params);
+      // eslint-disable-next-line
       items = items.concat(data.Items);
       params.ExclusiveStartKey = data.LastEvaluatedKey;
     } while (data.LastEvaluatedKey);
