@@ -18,12 +18,12 @@ export default auth(req => {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
   const isAdminRoute = nextUrl.pathname.startsWith(adminRoutesPrefix);
 
-  if (isApiAuthRoute) return null;
+  if (isApiAuthRoute) return;
   if (isAuthRoute) {
     if (isLoggedIn) {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
-    return null;
+    return;
   }
   if (isAdminRoute && session?.user.role !== "ADMIN") {
     return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
@@ -31,7 +31,6 @@ export default auth(req => {
   if (!isLoggedIn && !isPublicRoute) {
     return Response.redirect(new URL("login", nextUrl.origin));
   }
-  return null;
 });
 
 // Optionally, don't invoke Middleware on some paths
