@@ -6,10 +6,11 @@ import {
 import { client } from "@/data/utils";
 
 export type User = {
-  id: number;
+  id: string;
   name: string;
   email: string;
   role: string;
+  password?: string;
   image?: string;
   created_at?: string;
   updated_at?: string;

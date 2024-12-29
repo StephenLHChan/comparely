@@ -1,4 +1,4 @@
-import NextAuth, { type User } from "next-auth";
+import NextAuth, { type User as NextAuthUser } from "next-auth";
 import Credential from "next-auth/providers/credentials";
 
 import Google from "next-auth/providers/google";
@@ -16,7 +16,7 @@ export type UserRole = "ADMIN" | "USER";
 
 export type ExtendedUser = {
   role: UserRole;
-} & User;
+} & NextAuthUser;
 
 declare module "next-auth" {
   /**
