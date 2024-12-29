@@ -6,6 +6,15 @@ import {
 } from "@aws-sdk/lib-dynamodb";
 import { client } from "@/data/utils";
 
+export type Product = {
+  id: number;
+  name: string;
+  upc?: string;
+  image?: string;
+  created_at?: string;
+  updated_at?: string;
+};
+
 const tableName =
   process.env.PRODUCT_DYNAMODB_TABLE_NAME || "comparely-product";
 const indexName = process.env.PRODUCT_INDEX_NAME || "GSI1";
@@ -23,13 +32,11 @@ export const getProducts = async () => {
     };
 
     let data: ScanCommandOutput;
-    // eslint-disable-next-line
-    let items = [];
+    let items: Product[] = [];
 
     do {
       data = await client.scan(params);
-      // eslint-disable-next-line
-      items = items.concat(data.Items);
+      items = items.concat(data.Items as Product[]);
       params.ExclusiveStartKey = data.LastEvaluatedKey;
     } while (data.LastEvaluatedKey);
     return items;
@@ -47,7 +54,7 @@ export const getProduct = async (productId: string) => {
         sk: `PRODUCT#${productId}`,
       },
     });
-    return data.Item;
+    return data.Item as Product;
   } catch {
     return null;
   }
@@ -69,7 +76,7 @@ export const getProductByUpc = async (upc: string) => {
       },
     });
 
-    return data.Items?.[0];
+    return data.Items?.[0] as Product;
   } catch {
     return null;
   }
@@ -77,7 +84,7 @@ export const getProductByUpc = async (upc: string) => {
 
 // eslint-disable-next-line
 export const createProduct = async (data: any) => {
-  const product = {
+  const product: Product = {
     // eslint-disable-next-line
     ...(data as any),
     id: crypto.randomUUID(),

@@ -2,7 +2,7 @@ import { UserInfo } from "@/components/user-info";
 import { getUser } from "@/data/user";
 
 interface UserInfoPageProps {
-  params: { userId: string };
+  params: Promise<{ userId: string }>;
 }
 
 const UserInfoPage = async ({ params }: UserInfoPageProps) => {

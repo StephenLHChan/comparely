@@ -6,15 +6,6 @@ import { DataTable } from "@/components/data-table";
 
 import { CirclePlus } from "lucide-react";
 
-export type Product = {
-  id: number;
-  name: string;
-  role: string;
-  image: string;
-  created_at: string;
-  updated_at?: string;
-};
-
 const ProductPage = async () => {
   const products = await getProducts();
 

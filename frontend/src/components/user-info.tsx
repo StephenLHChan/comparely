@@ -1,4 +1,4 @@
-import { ExtendedUser } from "@/auth";
+import { User } from "@/data/user";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +13,7 @@ import {
 import { CalendarIcon, CircleCheck, CircleX, Mail } from "lucide-react";
 
 interface UserInfoProps {
-  user?: ExtendedUser & { created_at: string; emailVerified: string };
+  user?: User;
   label: string;
 }
 

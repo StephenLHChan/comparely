@@ -5,6 +5,17 @@ import {
 
 import { client } from "@/data/utils";
 
+export type User = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  image?: string;
+  created_at?: string;
+  updated_at?: string;
+  emailVerified?: string;
+};
+
 const tableName = process.env.AUTH_DYNAMODB_TABLE_NAME;
 const indexName = process.env.AUTH_INDEX_NAME || "GSI1";
 
@@ -21,13 +32,11 @@ export const getUsers = async () => {
     };
 
     let data: ScanCommandOutput;
-    // eslint-disable-next-line
-    let items = [];
+    let items: User[] = [];
 
     do {
       data = await client.scan(params);
-      // eslint-disable-next-line
-      items = items.concat(data.Items);
+      items = items.concat(data.Items as User[]);
       params.ExclusiveStartKey = data.LastEvaluatedKey;
     } while (data.LastEvaluatedKey);
     return items;
@@ -52,7 +61,7 @@ export const getUserByEmail = async (email: string) => {
       },
     });
 
-    return data.Items?.[0];
+    return data.Items?.[0] as User;
   } catch {
     return null;
   }
@@ -67,7 +76,7 @@ export const getUser = async (userId: string) => {
         sk: `USER#${userId}`,
       },
     });
-    return data.Item;
+    return data.Item as User;
   } catch {
     return null;
   }
@@ -77,7 +86,7 @@ type UserRole = "USER" | "ADMIN";
 
 // eslint-disable-next-line
 export const createUser = async (data: any, role: UserRole = "USER") => {
-  const user = {
+  const user: User = {
     // eslint-disable-next-line
     ...(data as any),
     role,

@@ -42,13 +42,15 @@ import {
 
 import UserAvatar from "@/components/user-avatar";
 
-import { User } from "@/app/(protected)/admin/user/page";
-import { Product } from "@/app/(protected)/product/page";
+import { User } from "@/data/user";
+import { Product } from "@/data/product";
 
 interface DataTableProps {
   data: (User | Product)[];
   dataType: "User" | "Product";
 }
+
+let pathname = "";
 
 const userColumns: ColumnDef<User>[] = [
   {
@@ -182,17 +184,18 @@ const columnsMapping = {
   Product: productColumns,
 };
 
-let pathname = "";
-
 export const DataTable = ({ data, dataType }: DataTableProps) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
+  type DataType = typeof data extends (infer U)[] ? U : never;
+
   pathname = usePathname();
 
-  const columns = columnsMapping[dataType];
+  // eslint-disable-next-line
+  const columns: ColumnDef<DataType | any>[] = columnsMapping[dataType];
 
   const table = useReactTable({
     data,
