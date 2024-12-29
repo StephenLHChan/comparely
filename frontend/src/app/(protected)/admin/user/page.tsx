@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/data-table";
 
 import { CirclePlus } from "lucide-react";
-import { User } from "@/data/user";
 
 const UserPage = async () => {
   const users = await getUsers();
