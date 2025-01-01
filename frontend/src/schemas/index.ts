@@ -10,3 +10,10 @@ export const RegisterSchema = z.object({
   password: z.string().min(6, { message: "Minimum 6 characters required." }),
   name: z.string().min(1, { message: "Name is required." }),
 });
+
+export const ProductSchema = z.object({
+  name: z.string().min(1, { message: "Name is requied" }),
+  brandName: z.string().min(1, { message: "Brand name is requied" }),
+  image: z.string().optional(),
+  upc: z.string().optional(),
+});
