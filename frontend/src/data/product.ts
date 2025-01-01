@@ -5,6 +5,7 @@ import {
   type ScanCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
 import { client } from "@/data/utils";
+import { currentUser } from "@/lib/auth";
 
 export type Product = {
   id: number;
@@ -20,6 +21,10 @@ const tableName =
 const indexName = process.env.PRODUCT_INDEX_NAME || "GSI1";
 
 export const getProducts = async () => {
+  const user = await currentUser();
+  if (!user) {
+    return null;
+  }
   try {
     const params: ScanCommandInput = {
       TableName: tableName,
@@ -95,6 +100,19 @@ export const createProduct = async (data: any) => {
     Item: {
       ...product,
       pk: `PRODUCT#${product.id}`,
+      sk: `PRODUCT#${product.id}`,
+      type: "PRODUCT",
+      GSI1PK: `PRODUCT#${product.upc}`,
+      GSI1SK: `PRODUCT#${product.upc}`,
+      created_at: new Date().toISOString(),
+    },
+  });
+
+  await client.put({
+    TableName: tableName,
+    Item: {
+      ...product,
+      pk: `BRAND#${product.id}`,
       sk: `PRODUCT#${product.id}`,
       type: "PRODUCT",
       GSI1PK: `PRODUCT#${product.upc}`,
